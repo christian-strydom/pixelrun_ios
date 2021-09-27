@@ -1,33 +1,27 @@
 workflows:
-  my-workflow:
-    name: Pixelrun workflow
-    instance_type: mac_mini
-    max_build_duration: 60
+  ios-workflow:
+    name: ios_workflow
     environment:
       groups:
-        - group_name
+        - app_store_credentials # <-- Includes: APP_STORE_CONNECT_ISSUER_ID, APP_STORE_CONNECT_KEY_IDENTIFIER, APP_STORE_CONNECT_PRIVATE_KEY
+        - certificate_credentials # <-- Includes: CERTIFICATE_PRIVATE_KEY
+        - other
+       # Add the group environment variables in Codemagic UI (either in Application/Team variables) - https://docs.codemagic.io/variables/environment-variable-groups/
       vars:
-        PUBLIC_ENV_VAR: "value here"
-      flutter: stable
+        XCODE_WORKSPACE: "index.xcodeproj/project.xcworkspace"  # PUT YOUR WORKSPACE NAME HERE
+        XCODE_SCHEME: "index.xcscheme" # PUT THE NAME OF YOUR SCHEME HERE
       xcode: latest
-    cache:
-      cache_paths:
-        - ~/.pub-cache
+      cocoapods: default
     triggering:
       events:
         - push
       branch_patterns:
-        - pattern: '*'
+        - pattern: master
           include: true
           source: true
-      cancel_previous_builds: false
     scripts:
-      - ...
+      - xcodebuild build -workspace XCODE_WORKSPACE -scheme XCODE_SCHEME CODE_SIGN_INDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
     artifacts:
-      - build/**/outputs/bundle/**/*.aab
-    publishing:
-      email:
-        recipients:
-          - christian.strydom@gmail.com
-      scripts:
-        - echo 'Post-publish script'
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
