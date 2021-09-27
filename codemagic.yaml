@@ -8,8 +8,8 @@ workflows:
         - other
        # Add the group environment variables in Codemagic UI (either in Application/Team variables) - https://docs.codemagic.io/variables/environment-variable-groups/
       vars:
-        XCODE_WORKSPACE: "index.xcodeproj/project.xcworkspace"  # PUT YOUR WORKSPACE NAME HERE
-        XCODE_SCHEME: "index.xcodeproj/xcshareddata/xcschemes/index.xcscheme" # PUT THE NAME OF YOUR SCHEME HERE
+        XCODE_WORKSPACE: "project.xcworkspace"  # PUT YOUR WORKSPACE NAME HERE
+        XCODE_SCHEME: "index.xcscheme" # PUT THE NAME OF YOUR SCHEME HERE
       xcode: latest
       cocoapods: default
     triggering:
